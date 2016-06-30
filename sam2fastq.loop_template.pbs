@@ -1,0 +1,31 @@
+#! /bin/bash 
+# picardtools sam2fastq
+
+#PBS -P RDS-FAE-rustgenome-RW
+#PBS -N tofqMY_BAM_FILE
+#PBS -l nodes=1:ppn=4
+#PBS -l walltime=03:00:00
+#PBS -l pmem=4gb
+#PBS -M jingqin.wu@sydney.edu.au
+#PBS -m abe
+
+
+#Synopsis: bamfiles to fastq for alignment
+
+# Load modules:
+module load samtools
+module load java
+module load picard
+
+# Working directory: 
+inpath=/project/RDS-FAE-rustgenome-RW/wheat_leaf_rust/transfer/bamfiles
+outpath=/project/RDS-FAE-rustgenome-RW/wheat_leaf_rust/CNV20samp/Files_fastq
+
+file=$inpath/MY_BAM_FILE.bam
+
+#GATK/Picard:
+prefix=$(basename $file .bam)
+java -Xmx4g -jar /usr/local/picard/1.119/SamToFastq.jar I=${file}  F=${outpath}/${prefix}_1.fastq F2=${outpath}/${prefix}_2.fastq UNPAIRED_FASTQ=${outpath}/${prefix}_unparied.fastq INCLUDE_NON_PF_READS=True
+
+
+
